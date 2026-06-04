@@ -1,0 +1,28 @@
+<div class="h-full">
+  {{ $image:= .Params.image }}
+  {{ if $image }}
+    <a href="{{ .RelPermalink }}">
+      {{ partial "helpers/image" (dict "Src" $image "Context" .Page "Alt" .Title "Class" "object-cover rounded-t w-full" "Width" "389" "Height" "277" "Loading" "lazy") }}
+    </a>
+  {{ end }}
+  <div class="p-9 bg-light rounded-b">
+    <div class="flex flex-wrap items-center gap-2.5 mb-3">
+      {{ $categories:= .Params.categories }}
+      {{ if $categories }}
+        {{ range $i,$p:= $categories }}
+          <p class="text-primary">
+            {{ . | humanize }}{{ if ne $i (sub (len $categories) 1) }},{{ end }}
+          </p>
+        {{ end }}
+        <div class="bg-black/30 h-[3px] w-[3px] rounded-full opacity-100"></div>
+      {{ end }}
+
+      <p class="text-text/50 text-base">
+        {{ .Date.Format "Jan 02, 2006" }}
+      </p>
+    </div>
+    <a href="{{ .RelPermalink }}">
+      <span class="text-xl font-medium">{{ .Title | markdownify }}</span>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+############# English navigation ##############
+
+# main menu
+[[main]]
+name = "About Us"
+url = "about/"
+weight = 1
+
+[[main]]
+name = "Services"
+url = "services/"
+weight = 2
+
+[[main]]
+name = "Gallery"
+url = "gallery/"
+weight = 3
+
+[[main]]
+name = "Blog"
+url = "blog/"
+weight = 4
+
+[[main]]
+name = "Contact"
+url = "contact/"
+weight = 5
+
+
+
+# footer menu
+# Company section
+[[footer_01]]
+name = "Company" # This acts as the section title
+title = true     # Flag to identify this as a section title
+weight = 0       # Lower weight to appear first
+
+[[footer_01]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[footer_01]]
+name = "Services"
+url = "services/"
+weight = 2
+
+[[footer_01]]
+name = "About Us"
+url = "about/"
+weight = 3
+
+[[footer_01]]
+name = "Elements"
+url = "elements/"
+weight = 4
+
+[[footer_01]]
+name = "Contacts"
+url = "contact/"
+weight = 5
+
+# Services section
+[[footer_02]]
+name = "Services" # This acts as the section title
+title = true      # Flag to identify this as a section title
+weight = 0        # Lower weight to appear first
+
+[[footer_02]]
+name = "Home Cleaning"
+url = "services/home-cleaning/"
+weight = 1
+
+[[footer_02]]
+name = "Window Cleaning"
+url = "services/window-cleaning/"
+weight = 2
+
+[[footer_02]]
+name = "Pest Control"
+url = "services/pest-control/"
+weight = 3
+
+[[footer_02]]
+name = "Floor Cleaning"
+url = "services/floor-cleaning/"
+weight = 4

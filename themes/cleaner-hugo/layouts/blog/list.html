@@ -1,0 +1,63 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20">
+    <div class="container">
+      <div class="mx-auto text-center">
+        {{ if .Params.badge }}
+          <p
+            class="text-base text-primary mb-6"
+            data-aos="fade-up-sm">
+            {{ .Params.badge | markdownify }}
+          </p>
+        {{ end }}
+        {{ if .Params.title }}
+          <h1
+            class="text-h2 md:text-h1 mb-16"
+            data-aos="fade-up-sm"
+            data-aos-delay="100">
+            {{ partial "components/decorated-heading" (dict
+              "text" .Params.title
+              )
+            }}
+          </h1>
+        {{ end }}
+      </div>
+
+      <div class="row justify-center g-4">
+        {{ $paginator := .Paginate (where .RegularPages "Type" "blog") }}
+        {{ range $index, $post := $paginator.Pages }}
+          <div
+            class="xl:col-4 md:col-6 col-12"
+            data-aos="zoom-in-sm"
+            data-aos-delay="{{ mul $index 100 }}">
+            {{ partial "components/blog-card" . }}
+          </div>
+        {{ end }}
+      </div>
+
+      <!-- Pagination -->
+      {{ if gt $paginator.TotalPages 1 }}
+        <div class="flex justify-center mt-12">
+          <ul class="pagination">
+            {{ if $paginator.HasPrev }}
+              <li class="page-item">
+                <a href="{{ $paginator.Prev.URL }}" class="page-link">&laquo;</a>
+              </li>
+            {{ end }}
+
+            {{ range $paginator.Pagers }}
+              <li class="page-item {{ if eq . $paginator }}active{{ end }}">
+                <a href="{{ .URL }}" class="page-link">{{ .PageNumber }}</a>
+              </li>
+            {{ end }}
+
+            {{ if $paginator.HasNext }}
+              <li class="page-item">
+                <a href="{{ $paginator.Next.URL }}" class="page-link">&raquo;</a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+  </section>
+{{ end }}

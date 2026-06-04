@@ -1,0 +1,48 @@
+<!-- Blog Section -->
+<section class="section bg-light">
+  <div class="container">
+    {{ with .Params.blog }}
+      {{ if .subtitle }}
+        <p
+          class="mb-5 text-base-sm text-primary text-center"
+          data-aos="fade-up-sm">
+          {{ .subtitle | markdownify }}
+        </p>
+      {{ end }}
+      {{ if .title }}
+        <h2 class="text-h3 md:text-h2 mb-16 text-center" data-aos="fade-up-sm" data-aos-delay="50">
+          {{ partial "components/decorated-heading" (dict
+            "text" .title
+            "svgColor" "text-accent"
+            )
+          }}
+        </h2>
+      {{ end }}
+    {{ end }}
+
+
+    <div class="row mb-12 justify-center">
+      {{ $blogPosts := where site.RegularPages "Section" "blog" }}
+      {{ range $i, $e := first 3 $blogPosts }}
+        <div
+          class="col-12 md:col-6 lg:col-4"
+          data-aos="fade-up-sm"
+          data-aos-delay="{{ add 100 (mul $i 50) }}">
+          {{ partial "components/blog-card.html" . }}
+        </div>
+      {{ end }}
+    </div>
+
+    <div class="flex items-center justify-center">
+      <a
+        href="{{ `blog` | relLangURL }}"
+        class="font-semibold flex items-center"
+        data-aos="fade-up-sm"
+        data-aos-delay="150">
+        {{ i18n "read_all_articles" | default "Read All Articles" }}
+        <i
+          class="fa-solid fa-arrow-right-long inline-block ml-2.5 text-center mx-auto"></i>
+      </a>
+    </div>
+  </div>
+</section>

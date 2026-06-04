@@ -1,0 +1,15 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20">
+    <div class="container">
+      <ul class="text-center">
+        {{ range .RegularPages }}
+          <li class="m-3">
+            <a href="{{ .Permalink }}" class="text-text-dark  block text-xl">
+              {{ .Title }}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+{{ end }}

@@ -1,0 +1,336 @@
+{{ define "main" }}
+  <!-- Hero Section -->
+  {{ with .Params.hero }}
+    {{ $imagePath := strings.TrimPrefix "/" .image }}
+    {{ $bgImage := resources.Get $imagePath }}
+
+    <section
+      class="section relative mb-22"
+      style="background-image: url('{{ if $bgImage }}{{ $bgImage.RelPermalink }}{{ else }}{{ .image | absURL }}{{ end }}'); background-size: cover; background-position: center;">
+      <div
+        class="container pt-24 sm:pt-20 pb-[280px] lg:pb-[228px] relative z-20">
+        {{ if .subtitle }}
+          <p
+            class="text-lg mb-5 text-center lg:text-left"
+            data-aos="fade-up-sm"
+            data-aos-delay="20">
+            {{ .subtitle | markdownify }}
+          </p>
+        {{ end }}
+
+
+        <h1 class="mb-9 h3 lg:text-[72px] xl:text-[80px] xl:tracking-[-3px] xl:leading-[88px] text-center lg:text-left text-balance" data-aos="fade-up-sm" data-aos-delay="40">
+          {{ partial "components/decorated-heading" (dict
+            "text" .title
+            "svgColor" "text-accent"
+            )
+          }}
+        </h1>
+
+        {{ if .buttons }}
+          <div
+            class="flex flex-col md:flex-row justify-center lg:justify-start items-center gap-4"
+            data-aos="fade-up-sm"
+            data-aos-delay="60">
+            {{ range $index, $button := .buttons }}
+              {{ if $button.enable }}
+                {{ partial "components/custom-button" (dict
+                  "label" $button.label
+                  "link" ($button.link | absURL)
+                  "className" "w-fit"
+                  "data_aos" "zoom-in-sm"
+                  "data_aos_delay" (add 80 (mul $index 20))
+                  "icon" $button.icon
+                  "variant" (cond (eq (mod $index 2) 0) "secondary" "primary")
+                  "target" (cond (strings.HasPrefix $button.link `http`) "_blank" "")
+                  "rel" (cond (strings.HasPrefix $button.link `http`) "noopener" "")
+                  )
+                }}
+              {{ end }}
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+
+      {{ if .reviews }}
+        <div class="absolute z-30 bottom-1 left-0 w-full">
+          <div class="container">
+            <div
+              class="flex flex-col md:flex-row items-center lg:justify-start justify-center gap-14 py-10">
+              {{ range $index, $review := .reviews }}
+                <div data-aos="fade-left-sm">
+                  {{ if $review.company_logo }}
+                    {{ partial "image" (dict "Src" $review.company_logo "Alt" $review.company_logo "Class" "pb-5" "DataAos" "fade-up-sm" "DataAosDelay" (add 100 (mul $index 50))) }}
+                  {{ end }}
+                  <div
+                    class="flex justify-start items-center gap-x-2"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="{{ add 120 (mul $index 50) }}">
+                    <div
+                      class="Stars"
+                      style="--rating: {{ $review.rating }}"
+                      aria-label="Rating from the company"></div>
+                    <span class="text-base ml-[10px]"
+                      >{{ $review.rating }} Out of 5</span
+                    >
+                  </div>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      {{ end }}
+
+
+      <div
+        class="absolute -bottom-1 left-0 w-full lg:w-4/6 xl:w-1/2 min-h-[330px] md:min-h-[200px] bg-body z-20"></div>
+      <div
+        class="absolute inset-0 w-[78%] h-full z-10 bg-gradient-to-r from-[#c1dce2] via-[#a6c9d3] to-transparent"
+        data-aos="fade-right-sm"></div>
+    </section>
+  {{ end }}
+  <!-- /Hero Section -->
+
+  <!-- Services Section -->
+  <section class="section pt-0">
+    {{ with site.GetPage "services" }}
+      {{ partial "components/services" (dict "serviceIndex" .Params "allServices" (where site.RegularPages "Type" "services") "hero" false ) }}
+    {{ end }}
+  </section>
+  <!-- /Services Section -->
+
+  <!-- About Section -->
+  {{ with .Params.about }}
+    <section class="section pt-0 lg:pb-44">
+      <div class="container">
+        <div
+          class="flex flex-col lg:flex-row justify-between gap-32 lg:gap-10 items-center">
+          <div class="lg:w-[55%]">
+            <div class="relative">
+              {{ if .images }}
+                {{ if index .images 0 }}
+                  <div data-aos="zoom-in-sm">
+                    {{ partial "image" (dict
+                      "Src" (index .images 0)
+                      "Alt" "about images"
+                      "Class" "rounded top-0 xl:-top-12 w-[80%]"
+                      )
+                    }}
+                  </div>
+                {{ end }}
+                {{ if index .images 1 }}
+                  <div data-aos="zoom-in-sm" data_aos_delay="20">
+                    {{ partial "image" (dict
+                      "Src" (index .images 1)
+                      "Alt" "about images"
+                      "Class" "absolute rounded right-0 -bottom-20 w-[60%]"
+                      )
+                    }}
+                  </div>
+                {{ end }}
+              {{ end }}
+              {{ if .badge }}
+                <div data-aos="zoom-in-sm" data-aos-delay="40">
+                  {{ partial "image" (dict
+                    "Src" .badge
+                    "Alt" "badge"
+                    "Class" "hidden md:block absolute right-0 top-1/2 translate-y-[-140%] translate-x-[40%] spin-animation scale-80 w-[30%]")
+                  }}
+                </div>
+              {{ end }}
+            </div>
+          </div>
+          <div class="lg:w-[33%]">
+            {{ if .subtitle }}
+              <p
+                class="mb-7 text-base-sm text-primary text-center lg:text-left"
+                data-aos="fade-up-sm">
+                {{ .subtitle | markdownify }}
+              </p>
+            {{ end }}
+
+            {{ if .title }}
+              <h2
+                class="text-h3 md:text-h2 text-balance mb-7 text-center lg:text-left"
+                data-aos="fade-up-sm"
+                data-aos-delay="50">
+                {{ partial "components/decorated-heading" (dict
+                  "text" .title
+                  "svgColor" "text-accent"
+                  )
+                }}
+              </h2>
+            {{ end }}
+
+            {{ if .content }}
+              <p
+                class="mb-8 text-center lg:text-left"
+                data-aos="fade-up-sm"
+                data-aos-delay="100">
+                {{ .content | markdownify }}
+              </p>
+            {{ end }}
+
+            {{ if .schedule }}
+              {{ range $index, $schedule := .schedule }}
+                <p
+                  class="font-medium text-base text-center lg:text-left"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="{{ add 100 (mul $index 50) }}">
+                  <span>{{ $schedule.day | markdownify }}</span>
+                  <span>{{ $schedule.time | markdownify }}</span>
+                </p>
+              {{ end }}
+            {{ end }}
+
+            {{ if .button.enable }}
+              <div
+                class="w-full flex justify-center lg:justify-start"
+                data-aos="fade-up-sm"
+                data-aos-delay="150">
+                {{ partial "components/custom-button" (dict
+                  "label" .button.label
+                  "link" (.button.link | absURL)
+                  "className" "mt-8 btn-sm! sm:btn!"
+                  "variant" "secondary"
+                  "icon" .button.icon
+                  )
+                }}
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {{ end }}
+  <!-- /About Section -->
+
+  <!-- Responsibility Section -->
+  {{ with .Params.responsibility }}
+    <section class="section-sm pt-0 relative">
+      <div class="xl:absolute w-full max-xl:mb-14">
+        <div class="container 2xl:mt-10">
+          {{ if .subtitle }}
+            <p
+              class="mb-6 text-primary text-base-sm max-xl:text-center"
+              data-aos="fade-up-sm">
+              {{ .subtitle | markdownify }}
+            </p>
+          {{ end }}
+
+          {{ if .title }}
+            <h1  class="text-h3 md:text-h2-sm mb-7 max-xl:text-center" data-aos="fade-up-sm" data-aos-delay="20">
+              {{ partial "components/decorated-heading" (dict
+                "text" .title
+                "svgColor" "text-accent"
+                )
+              }}
+            </h1>
+          {{ end }}
+
+          {{ if .content }}
+            <p
+              class="mb-7 xl:pl-[208px] max-xl:text-center text-text/80"
+              data-aos="fade-up-sm"
+              data-aos-delay="40">
+              {{ .content | markdownify }}
+            </p>
+          {{ end }}
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row justify-between xl:items-baseline">
+        <div class="md:w-[60%]">
+          <div class="mt-auto flex flex-col xl:flex-row">
+            {{ if .image }}
+              <div
+                data-aos="fade-up-sm"
+                data-aos-delay="60"
+                class="xl:w-1/2 object-cover mt-auto">
+                {{ partial "image" (dict
+                  "Src" .image
+                  "Alt" "responsibility"
+                  "Width" 594
+                  "Height" 500
+                  "Class" "w-full"
+                  )
+                }}
+              </div>
+            {{ end }}
+            <div
+              class="bg-primary flex flex-col justify-center gap-9 p-8 xl:w-1/2">
+              {{ range $index, $job := .job }}
+                <div
+                  data-aos="fade-up-sm"
+                  data-aos-delay="{{ add 80 (mul $index 20) }}">
+                  <h6 class="text-text-light mb-2">
+                    {{ $job.title | markdownify }}
+                  </h6>
+                  <p class="text-base-sm text-text-light/80">
+                    {{ $job.content | markdownify }}
+                  </p>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+        {{ if .video }}
+          {{ partial "components/video-player" .video }}
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+  <!-- /Responsibility Section -->
+
+  <!-- Customer Section -->
+  {{ with .Params.customer }}
+    <section class="section-sm pt-0">
+      <div class="container">
+        <div
+          class="flex flex-col lg:flex-row justify-center lg:justify-between lg:items-end gap-y-10 lg:gap-4">
+          <div class="text-center lg:text-left">
+            <h1 class="text-h1 text-primary" data-aos="fade-up-sm">
+              {{ .title.value | markdownify }}
+            </h1>
+            <p class="font-medium text-lg" data-aos="fade-up-sm">
+              {{ .title.text | markdownify }}
+            </p>
+          </div>
+
+          <div class="row justify-around max-md:g-3">
+            {{ range $index, $logo := .logo }}
+              <div class="col-6 sm:col">
+                {{ partial "image" (dict
+                  "Src" $logo
+                  "Alt" "logo"
+                  "Size" "168x41"
+                  "Class" "mx-auto"
+                  "DataAos" "fade-left-sm"
+                  "DataAosDelay" (mul $index 50)
+                  )
+                }}
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </section>
+  {{ end }}
+  <!-- /Customer Section -->
+
+  <hr class="border-t border-border" data-aos="fade-up-sm" />
+  <!-- Testimonial -->
+  {{ with .Params.testimonial }}
+    {{ partial "components/testimonial.html" . }}
+  {{ end }}
+  <!-- /Testimonial -->
+
+  <!-- Blog Section -->
+  {{ if .Params.blog.enable }}
+    {{ partial "blog-section.html" . }}
+  {{ end }}
+  <!-- /Blog Section -->
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}

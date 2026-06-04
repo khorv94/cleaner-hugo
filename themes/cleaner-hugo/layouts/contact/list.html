@@ -1,0 +1,111 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20">
+    <div class="container">
+      <div class="mb-24">
+        <p
+          class="text-primary text-base-sm mb-4 text-left"
+          data-aos="fade-up-sm">
+          {{ .Params.subtitle | markdownify }}
+        </p>
+
+        <h1
+          class="text-h2 lg:text-h1 text-left"
+          data-aos="fade-up-sm"
+          data-aos-delay="80">
+          {{ partial "components/decorated-heading" (dict
+            "text" .Title
+            "svgColor" "text-accent"
+            )
+          }}
+        </h1>
+      </div>
+      <div class="row justify-center items-center g-5">
+        <div class="col-12 lg:col-6 order-2 lg:order-1">
+          <div
+            class="p-10 bg-light rounded-lg"
+            data-aos="fade-up-sm"
+            data-aos-delay="100">
+            <form action="{contact_form_action}" method="POST">
+              <div class="row">
+                <div class="col-12">
+                  <div class="mb-6" data-aos="fade-up-sm" data-aos-delay="120">
+                    <label for="f-name" class="form-label"> First Name </label>
+                    <input
+                      id="f-name"
+                      name="f-name"
+                      class="form-input"
+                      placeholder="Your First Name"
+                      type="text"
+                      required />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="mb-6" data-aos="fade-up-sm" data-aos-delay="140">
+                    <label for="l-name" class="form-label"> Last Name </label>
+                    <input
+                      id="l-name"
+                      name="l-name"
+                      class="form-input"
+                      placeholder="Your Last Name"
+                      type="text"
+                      required />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="mb-6" data-aos="fade-up-sm" data-aos-delay="160">
+                    <label for="email" class="form-label">
+                      Email Address
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      class="form-input"
+                      placeholder="Your Email Address"
+                      type="email"
+                      required />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="mb-6" data-aos="fade-up-sm" data-aos-delay="180">
+                    <label for="message" class="form-label"> Message </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      class="form-input"
+                      placeholder="How can we help you?"
+                      rows="9"
+                      required></textarea>
+                  </div>
+                </div>
+                <div class="col" data-aos="fade-up-sm" data-aos-delay="200">
+                  {{ partial "components/custom-button" (dict
+                    "label" "Send A Message"
+                    "button_type" "submit"
+                    "variant" "primary"
+                    )
+                  }}
+                </div>
+
+
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12 lg:col-6 order-1 lg:order-2" data-aos="fade-up-sm">
+            {{ partial "helpers/image" (dict
+              "Src" .Params.image
+              "Alt" .Title
+              "Width" "570"
+              "Height" "806"
+              "Class" "object-cover mx-auto max-lg:w-3/4"
+            ) }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}

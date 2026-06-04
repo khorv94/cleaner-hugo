@@ -1,0 +1,82 @@
+{{ define "main" }}
+  <!-- Services Section -->
+  <section class="section mt-24 sm:mt-20">
+    {{ with site.GetPage "services" }}
+      {{ partial "components/services" (dict "serviceIndex" .Params "allServices" (where site.RegularPages "Type" "services") "hero" false ) }}
+    {{ end }}
+  </section>
+  <!-- /Services Section -->
+
+  <!-- Process Section -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="row justify-center lg:justify-start">
+        <div class="mb-18 col-12">
+          {{- with .Params.process -}}
+            {{- if .title -}}
+              <h2
+                class="text-h3 md:text-h2 mb-6 text-center md:text-left"
+                data-aos="fade-up-sm">
+                {{ partial "components/decorated-heading" (dict
+                  "text" .title
+                  "svgColor" "text-accent"
+                  )
+                }}
+              </h2>
+            {{- end -}}
+            {{- if .content -}}
+              <p
+                class="text-center md:text-left"
+                data-aos="fade-up-sm"
+                data-aos-delay="100">
+                {{ .content | markdownify }}
+              </p>
+            {{- end -}}
+          {{- end -}}
+        </div>
+        <div class="col-12">
+          {{- with .Params.process -}}
+            {{- if .processes -}}
+              <div class="row justify-start items-center g-5 xl:g-0">
+                {{- range $index, $step := .processes -}}
+                  <div
+                    class="row-child col-12 md:col-6 xl:col-3 xl:not-first:pl-0 xl:not-last:pr-0 min-h-full"
+                    data-aos="fade-up-sm"
+                    data-aos-delay="{{ mul $index 150 }}">
+                    {{- if $step.icon -}}
+                      <div
+                        class="h-full mb-7 xl:mb-10 overflow-hidden xl:relative before:xl:absolute before:xl:top-[52px] before:xl:left-0 before:xl:w-full before:xl:h-[1px] before:xl:bg-gray-300 before:xl:z-0 before:transform before:xl:translate-y-[-50%] custom-before">
+                        <div
+                          class="bg-primary rounded-full p-5 lg:p-7 w-fit max-md:mx-auto relative z-10">
+                          {{- partial "helpers/dynamic-icon.html" (dict "icon" $step.icon "className" "text-2xl text-white w-8 h-6 text-center") -}}
+                        </div>
+                      </div>
+                    {{- end -}}
+                    <h3 class="text-lg mb-4 max-md:text-center">
+                      {{ add $index 1 }}.
+                      <span>{{ $step.name | markdownify }}</span>
+                    </h3>
+                    <p class="text-base-sm max-md:text-center text-balance">
+                      {{ $step.content | markdownify }}
+                    </p>
+                  </div>
+                {{- end -}}
+              </div>
+            {{- end -}}
+          {{- end -}}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /Process Section -->
+
+  <style>
+    .row > .row-child:last-child .custom-before::before {
+      display: none;
+    }
+  </style>
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}

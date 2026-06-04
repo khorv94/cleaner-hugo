@@ -1,0 +1,36 @@
+{{ $service := .service }}
+{{ $index := .index }}
+
+
+<div class="group rounded-lg overflow-hidden relative">
+  {{ with $service.Params.banner }}
+    {{ partial "image" (dict "Src" . "Context" $service "Alt" $service.Title "Class" "w-full aspect-[5/3] object-cover" "Width" "400" "Height" "240") }}
+  {{ end }}
+
+
+  <div class="p-6">
+    <div class="flex flex-wrap items-center gap-2.5 mb-3 relative z-20">
+      {{ $categories:= $service.Params.categories }}
+      {{ if $categories }}
+        {{ range $i,$p:= $categories }}
+          <p class="text-primary">
+            {{ . | humanize }}{{ if ne $i (sub (len $categories) 1) }},{{ end }}
+          </p>
+        {{ end }}
+        <div class="bg-black/30 h-[3px] w-[3px] rounded-full opacity-100"></div>
+      {{ end }}
+
+      <p class="text-text/50 text-base">
+        {{ $service.Date.Format "Jan 02, 2006" }}
+      </p>
+    </div>
+
+    <a
+      href="{{ $service.RelPermalink }}"
+      class="after:absolute after:inset-0 z-10">
+      <h3 class="text-lg font-medium mb-3">
+        {{ $service.Title }}
+      </h3>
+    </a>
+  </div>
+</div>

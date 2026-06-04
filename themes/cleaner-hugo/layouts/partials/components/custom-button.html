@@ -1,0 +1,60 @@
+{{/* Custom Button Component
+  Params:
+  - label: Button text
+  - link: URL to navigate to (optional, if not provided it will be a button)
+  - variant: "primary", "secondary", or "light"
+  - type: CSS class for button size (e.g., "btn-sm")
+  - icon: Icon name (optional)
+  - class: Additional CSS classes (optional)
+  - dataAos: Animation on scroll effect (optional)
+  - dataAosDelay: Delay for animation (optional)
+  - button_type: Type attribute for button element (default: "submit")
+  - target: Target attribute for links (optional, e.g., "_blank")
+  - rel: Rel attribute for links (optional, e.g., "noopener")
+*/}}
+
+{{ $label := .label }}
+{{ $link := .link }}
+{{ $variant := .variant | default "primary" }}
+{{ $type := .type | default "btn" }}
+{{ $icon := .icon }}
+{{ $className := .class | default (.className | default "") }}
+{{ $dataAos := .dataAos | default (.data_aos | default "") }}
+{{ $dataAosDelay := .dataAosDelay | default (.data_aos_delay | default "") }}
+{{ $button_type := .button_type | default "submit" }}
+{{ $target := .target }}
+{{ $rel := .rel }}
+
+{{ $baseClasses := printf "relative overflow-hidden group %s %s %s" $type $className (cond (eq $variant "secondary") "btn-secondary" (cond (eq $variant "light") "btn-light" "btn-primary")) }}
+
+{{ $hoverEffectClasses := printf "absolute w-full h-full -left-full -bottom-full rounded-full group-hover:-left-1 group-hover:-bottom-1 group-hover:w-[110%%] group-hover:h-[110%%] transition-all duration-[550ms] %s" (cond (eq $variant "secondary") "bg-light" (cond (eq $variant "light") "bg-body" "bg-text")) }}
+
+{{ if $link }}
+  <a
+    href="{{ $link }}"
+    class="{{ $baseClasses }}"
+    {{ if $dataAos }}data-aos="{{ $dataAos }}"{{ end }}
+    {{ if $dataAosDelay }}data-aos-delay="{{ $dataAosDelay }}"{{ end }}
+    {{ if $target }}target="{{ $target }}"{{ end }}
+    {{ if $rel }}rel="{{ $rel }}"{{ end }}
+  >
+    {{ if $icon }}
+      {{ partial "helpers/dynamic-icon" (dict "icon" $icon "className" "relative z-10 inline-block pr-2") }}
+    {{ end }}
+    <span class="relative z-10">{{ $label }}</span>
+    <div class="{{ $hoverEffectClasses }}"></div>
+  </a>
+{{ else }}
+  <button
+    type="{{ $button_type }}"
+    class="{{ $baseClasses }}"
+    {{ if $dataAos }}data-aos="{{ $dataAos }}"{{ end }}
+    {{ if $dataAosDelay }}data-aos-delay="{{ $dataAosDelay }}"{{ end }}
+  >
+    <span class="relative z-10">{{ $label }}</span>
+    {{ if $icon }}
+      {{ partial "helpers/dynamic-icon" (dict "icon" $icon "className" "relative z-10 inline-block pl-2") }}
+    {{ end }}
+    <div class="{{ $hoverEffectClasses }}"></div>
+  </button>
+{{ end }}

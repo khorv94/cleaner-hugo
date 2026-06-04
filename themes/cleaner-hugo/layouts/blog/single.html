@@ -1,0 +1,73 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20">
+    <div class="container">
+      <div class="flex items-center justify-center gap-2.5 mb-6">
+        {{ $categories:= .Params.categories }}
+        {{ if $categories }}
+          {{ range $i,$p:= $categories }}
+            <p class="text-primary">
+              {{ . | humanize }}{{ if ne $i (sub (len $categories) 1) }}
+                {{ "," }}
+              {{ end }}
+            </p>
+          {{ end }}
+        {{ end }}
+        <div class="bg-black/30 h-[3px] w-[3px] rounded-full opacity-100"></div>
+        <p class="text-text/50 text-base">
+          {{ time.Format ":date_long" .PublishDate }}
+        </p>
+      </div>
+      {{ with .Title }}
+        <h1 class="text-h2 md:text-h1 text-balance text-center mb-16" data-aos="fade-up-sm">
+          {{ . }}
+        </h1>
+      {{ end }}
+      <div class="row justify-center">
+        <div class="lg:px-25 col-12" data-aos="zoom-in-sm">
+          {{ $image:= .Params.image }}
+          {{ if $image }}
+            {{ partial "image" (dict "Src" $image "Context" .Page "Alt" .Title "Class" "w-full aspect-video object-cover rounded-xl mb-11" "Width" "1256" "Height" "719" "Loading" "eager") }}
+          {{ end }}
+        </div>
+        <div class="col-12 mb-11">
+          <article class="lg:px-25" data-aos="fade-up-sm">
+            <div class="content">
+              {{ .Content }}
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{ $currentPage := . }}
+  {{ $relatedPosts := where site.RegularPages "Type" "blog" }}
+  {{ $filteredPosts := where $relatedPosts "Permalink" "ne" $currentPage.Permalink }}
+  {{ $relatedPosts := first 3 (shuffle $filteredPosts) }}
+  {{ if $relatedPosts }}
+    <hr class="border-border" />
+
+    <section class="section">
+      <div class="container">
+        <h2 class="text-h3 md:text-h2 mb-16 text-center" data-aos="fade-up-sm">
+          Read more articles
+        </h2>
+        <div class="row justify-center g-5">
+          {{ range $i, $p := $relatedPosts }}
+            <div
+              class="xl:col-4 md:col-6 col-12 min-h-full"
+              data-aos="zoom-in-sm"
+              data-aos-delay="{{ mul $i 100 }}"
+            >
+              {{ partial "components/blog-card" $p }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+  {{ end }}
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}

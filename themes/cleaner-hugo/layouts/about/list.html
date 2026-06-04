@@ -1,0 +1,237 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20" data-aos="fade-in-sm">
+    <div class="container">
+      <div>
+        {{ if .Params.subtitle }}
+          <p
+            class="text-primary text-base mb-6 text-center md:text-left"
+            data-aos="fade-up-sm">
+            {{ .Params.subtitle | markdownify }}
+          </p>
+        {{ end }}
+        {{ if .Title }}
+          <h1
+            class="text-h2 lg:text-h1 text-balance text-center md:text-left"
+            data-aos="fade-up-sm"
+            data-aos-delay="50">
+            {{ partial "components/decorated-heading" (dict
+              "text" .Title
+              "svgColor" "text-accent"
+              )
+            }}
+          </h1>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Us Section -->
+  {{ if .Params.why_us }}
+    {{ range $index, $item := .Params.why_us }}
+      <section class="section pt-0">
+        <div class="container">
+          <div class="row gy-5 justify-center md:justify-between items-center">
+            <div
+              class="col-12 md:col-6 md:w-[44%] {{ if eq (mod $index 2) 0 }}
+               order-1
+              {{ else }}
+                order-2
+              {{ end }}">
+              <div class="relative">
+                {{ partial "image" (dict "Src" $item.image "Context" $.Page "Alt" "first section image" "Class" "rounded-lg mx-auto w-full aspect-square" "Width" 570 "Height" 585) }}
+                {{ if $item.overlay_image }}
+                  {{ partial "image" (dict "Src" $item.overlay_image "Context" $.Page "Alt" "overlay image" "Class" "rounded-lg absolute bottom-6 right-6 w-2/5" "Width" 268 "Height" 161) }}
+                {{ end }}
+              </div>
+            </div>
+
+            <div
+              class="col-12 md:col-6 md:w-[53%] xl:w-[42%] {{ if eq (mod $index 2) 0 }}
+                order-1 md:order-2
+              {{ else }}
+                order-2 md:order-1
+              {{ end }}">
+              {{ if $item.subtitle }}
+                <p
+                  class="text-primary text-balance text-center md:text-left text-base-sm mb-6"
+                  data-aos="fade-up-sm">
+                  {{ $item.subtitle | markdownify }}
+                </p>
+              {{ end }}
+              {{ if $item.title }}
+                <h2
+                  class="text-h3-sm lg:text-h2-sm text-balance mb-6 text-center md:text-left"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="60">
+                  {{ partial "components/decorated-heading" (dict "text" $item.title "svgColor" "text-accent") }}
+                </h2>
+              {{ end }}
+              {{ if $item.content }}
+                <p
+                  class="mb-10 text-balance text-center md:text-left"
+                  data-aos="fade-up-sm"
+                  data-aos-delay="90">
+                  {{ $item.content | markdownify }}
+                </p>
+              {{ end }}
+              {{ if $item.bullet_points }}
+                <ul class="mt-10 lg:mt-16">
+                  {{ range $i, $point := $item.bullet_points }}
+                    <li
+                      class="mb-3.5 flex items-center justify-center md:justify-start"
+                      data-aos="fade-up-sm"
+                      data-aos-delay="{{ add 50 (mul $i 50) }}">
+                      <div
+                        class="w-5 h-5 bg-primary rounded-full flex items-center justify-center mr-2">
+                        <i class="fas fa-check text-white text-xs p-1"></i>
+                      </div>
+                      <span class="font-medium"
+                        >{{ $point | markdownify }}</span
+                      >
+                    </li>
+                  {{ end }}
+                </ul>
+              {{ end }}
+              {{ if $item.button.enable }}
+                <div class="flex justify-center md:justify-start">
+                  {{ partial "components/custom-button" (dict
+                  "label" $item.button.label
+                  "link" ($item.button.link | safeURL)
+                  "variant" "secondary"
+                  "data_aos" "fade-up-sm"
+                  "data_aos_delay" "120"
+                  )
+                }}
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </section>
+    {{ end }}
+  {{ end }}
+
+
+  <!-- Pride Section -->
+  {{ if .Params.pride }}
+    <section class="section pt-0">
+      <div class="container">
+        <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+          <div class="w-full md:w-1/2 h-full">
+            {{ if .Params.pride.subtitle }}
+              <p
+                class="mb-6 text-base-sm text-primary text-center md:text-left"
+                data-aos="fade-up-sm">
+                {{ .Params.pride.subtitle }}
+              </p>
+            {{ end }}
+
+            {{ if .Params.pride.title }}
+              <h2 class="max-md:mb-6 max-md:text-center" data-aos="fade-up-sm">
+                {{ partial "components/decorated-heading" (dict
+                  "text" .Params.pride.title
+                  "svgColor" "text-accent"
+                  )
+                }}
+              </h2>
+            {{ end }}
+
+          </div>
+
+          <div class="w-full md:w-[44%] h-full">
+            {{ if .Params.pride.content }}
+              <p
+                class="mb-6 last:mb-0 text-balance text-center md:text-left"
+                data-aos="fade-up-sm"
+                data-aos-delay="100">
+                {{ .Params.pride.content }}
+              </p>
+            {{ end }}
+          </div>
+        </div>
+
+        <div class="row justify-center">
+          <div class="col-12">
+            <div class="grid grid-cols-2 gap-4 mt-16">
+              {{ range $i, $img := .Params.pride.images }}
+                <div
+                  class="{{ print (cond (eq $i 0) "col-span-1 row-span-2 w-full h-full" "col-span-1 row-span-1 w-full h-full") " " }}">
+                  {{ partial "image" (dict
+                    "Src" .
+                    "Alt" "pride image"
+                    "Class" "object-cover rounded-lg"
+                    "data_aos" (cond (eq $i 0) "fade-right-sm" "fade-left-sm")
+                    "data_aos_delay" (add 100 (mul $i 50))
+                    )
+                  }}
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {{ end }}
+
+
+  <!-- Team Section -->
+  {{ if .Params.team.enable }}
+    <section class="section pt-0">
+      <div class="container">
+        <div>
+          {{ if .Params.team.subtitle }}
+            <p
+              class="text-center text-primary text-base-sm mb-6"
+              data-aos="fade-up-sm">
+              {{ .Params.team.subtitle }}
+            </p>
+          {{ end }}
+
+          {{ if .Params.team.title }}
+            <h2
+              class="text-h3-sm lg:text-h2-sm text-center mb-14 text-balance [&>br]:block"
+              data-aos="fade-up-sm"
+              data-aos-delay="100">
+              {{ partial "components/decorated-heading" (dict
+                "text" .Params.team.title
+                "svgColor" "text-accent"
+                )
+              }}
+            </h2>
+          {{ end }}
+        </div>
+
+        <div class="row justify-center g-4">
+          {{ range $i, $item := .Params.team.members }}
+            <div
+              data-aos="fade-up-sm"
+              data-aos-delay="{{ mul $i 100 }}"
+              class="col-12 md:col-6 lg:col-4 xl:col-3 min-h-full">
+              <div
+                class="flex flex-col justify-center items-center border border-border rounded-md overflow-hidden h-full">
+                {{ if $item.image }}
+                  {{ partial "image" (dict "Src" $item.image "Context" $.Page "Alt" $item.name "Class" "w-full h-full" "Size" "306x320") }}
+                {{ end }}
+
+
+                <div class="py-9">
+                  {{ if $item.name }}
+                    <h4 class="h6 mb-1 text-center">{{ $item.name }}</h4>
+                  {{ end }}
+                  {{ if $item.designation }}
+                    <p class="text-center text-base">{{ $item.designation }}</p>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+  {{ end }}
+
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}

@@ -1,0 +1,128 @@
+<footer class="section lg:py-[135px] bg-text">
+  <div class="container">
+    <div class="row max-lg:g-5 max-md:justify-center justify-between">
+      <div class="col-12 lg:col-4 min-h-full">
+        <div class="flex flex-col justify-between h-full">
+          <div>
+            {{ if site.Params.footer_logo }}
+              {{ partial "image" (dict
+                "Src" site.Params.footer_logo
+                "Size" "184x53"
+                "Alt" "footer logo"
+                "DataAos" "fade-in-sm"
+                "Class" "mb-4"
+              ) }}
+            {{ else }}
+              <a class="navbar-brand inline-block mb-4" href="{{ site.Home.RelPermalink }}">
+                {{ partial "logo" }}
+              </a>
+            {{ end }}
+
+            {{ if site.Params.footer_description }}
+              <p
+                class="text-base-sm text-text-light/60 text-balance"
+                data-aos="fade-up-sm"
+                data-aos-delay="100">
+                {{ site.Params.footer_description | markdownify }}
+              </p>
+            {{ end }}
+          </div>
+
+          <p
+            class="hidden lg:block text-base-sm text-text-light/60 [&>a]:text-text-light max-lg:mt-10"
+            data-aos="fade-up-sm">
+            {{ site.Params.copyright | markdownify }}
+          </p>
+        </div>
+      </div>
+      <div class="col-12 lg:col-6">
+        <div class="row max-md:gy-5 justify-between">
+          <!-- Company Section -->
+          <div
+            class="col-6 md:col-3 pr-0"
+            data-aos="fade-up-sm"
+            data-aos-delay="50">
+            {{ $section_title := "" }}
+            {{ range site.Menus.footer_01 }}
+              {{ if .Title }}
+                {{ $section_title = .Name }}
+                {{ break }}
+              {{ end }}
+            {{ end }}
+            <p class="mb-8 font-medium text-text-light">{{ $section_title }}</p>
+            <ul>
+              {{ range site.Menus.footer_01 }}
+                {{ if not .Title }}
+                  <li class="mb-4 last:mb-0 text-text-light/80 text-base-sm hover:text-secondary hover:underline transition-all duration-300 ease-in-out">
+                    <a href="{{ .URL | relLangURL }}">
+                      {{ .Name }}
+                    </a>
+                  </li>
+                {{ end }}
+              {{ end }}
+            </ul>
+          </div>
+
+          <!-- Services Section -->
+          <div
+            class="col-6 md:col-3 pr-0"
+            data-aos="fade-up-sm"
+            data-aos-delay="100">
+            {{ $section_title := "" }}
+            {{ range site.Menus.footer_02 }}
+              {{ if .Title }}
+                {{ $section_title = .Name }}
+                {{ break }}
+              {{ end }}
+            {{ end }}
+            <p class="mb-8 font-medium text-text-light">{{ $section_title }}</p>
+            <ul>
+              {{ range site.Menus.footer_02 }}
+                {{ if not .Title }}
+                  <li class="mb-4 last:mb-0 text-text-light/80 text-base-sm hover:text-secondary hover:underline transition-all duration-300 ease-in-out">
+                    <a href="{{ .URL | relLangURL }}">
+                      {{ .Name }}
+                    </a>
+                  </li>
+                {{ end }}
+              {{ end }}
+            </ul>
+          </div>
+
+          <!-- Social Section -->
+          <div
+            class="col-6 md:col-3 pr-0"
+            data-aos="fade-up-sm"
+            data-aos-delay="150">
+            <p class="mb-8 font-medium text-text-light">
+              {{ with site.Data.social.title }}
+                {{ . }}
+              {{ else }}
+                Social
+              {{ end }}
+            </p>
+            <ul>
+              {{ range site.Data.social.main }}
+                <li class="mb-4 last:mb-0 text-text-light/80 text-base-sm hover:text-secondary hover:underline transition-all duration-300 ease-in-out">
+                  <a
+                    href="{{ .link | safeURL }}"
+                    class="capitalize"
+                    target="_blank">
+                    {{ .name }}
+                  </a>
+                </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="block lg:hidden">
+      <p
+        class="text-base-sm text-text-light/60 [&>a]:text-text-light max-lg:mt-10"
+        data-aos="fade-up-sm">
+        {{ site.Params.copyright | markdownify }}
+      </p>
+    </div>
+  </div>
+</footer>

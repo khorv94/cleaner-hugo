@@ -1,0 +1,10 @@
+{{/* Dynamic Icon Component
+  Params:
+  - icon: Font Awesome icon name (without fa- prefix)
+  - className: Additional CSS classes (optional)
+*/}}
+
+{{ $icon := .icon }}
+{{ $className := .className | default "" }}
+
+<i class="{{ $className }} fa-solid {{ $icon }}"></i>

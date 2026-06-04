@@ -1,0 +1,133 @@
+{{ if site.Params.notification.enable }}
+<div
+  class="absolute top-0 z-20 flex flex-col sm:flex-row justify-center items-center gap-4.5 w-full bg-primary py-2"
+  data-aos="fade-down-sm">
+  <p
+    class="text-text-light/80 text-base-sm">
+    {{ site.Params.notification.message | markdownify }}
+  </p>
+
+  <a href="{{ site.Params.notification.link | safeURL }}" class="text-text-light flex items-center">
+    <i class="fa-solid {{ site.Params.notification.icon }} mr-2.5"></i>
+    {{ site.Params.notification.label }}
+  </a>
+</div>
+{{ end }}
+
+<header class="header z-50 absolute top-26 sm:top-12">
+  <nav class="navbar mx-auto max-w-[1356px]! px-[30px]">
+    <!-- navbar brand/logo -->
+    <div class="order-0" data-aos="zoom-in" data-aos-delay="20">
+      <a class="navbar-brand block" href="{{ site.Home.RelPermalink }}">
+        {{ partial "logo" }}
+      </a>
+    </div>
+
+    <div class="flex items-center gap-4.5">
+      {{ if site.Params.navigation_button.enable }}
+        {{ partial "components/custom-button" (dict
+          "label" site.Params.navigation_button.label
+          "link" (site.Params.navigation_button.link | relLangURL)
+          "type" "btn-sm"
+          "className" "order-1 hidden lg:hidden! sm:inline-block"
+          "data_aos" "zoom-in-sm"
+        ) }}
+      {{ end }}
+
+      <!-- navbar toggler -->
+      <input id="nav-toggle" type="checkbox" class="hidden" />
+      <label
+        for="nav-toggle"
+        class="order-3 cursor-pointer flex items-center lg:hidden text-text lg:order-1 bg-primary p-2 rounded">
+        <svg
+          id="show-button"
+          class="h-5 fill-text-light block"
+          viewBox="0 0 20 20">
+          <title>Menu Open</title>
+          <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
+        </svg>
+        <svg
+          id="hide-button"
+          class="h-5 fill-text-light hidden"
+          viewBox="0 0 20 20">
+          <title>Menu Close</title>
+          <polygon
+            points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
+            transform="rotate(45 10 10)"></polygon>
+        </svg>
+      </label>
+
+      <!-- /navbar toggler -->
+      <ul id="nav-menu" class="navbar-nav">
+        {{ $currentPage := . }}
+        {{ range $i, $menu := site.Menus.main }}
+          {{ $menuURL := .URL | absLangURL }}
+          {{ $pageURL:= $currentPage.Permalink | absLangURL }}
+          {{ $active := eq $menuURL $pageURL }}
+          {{ $delay := add 100 (mul $i 50) }}
+
+          {{ if .HasChildren }}
+            <li class="nav-item nav-dropdown group relative" data-aos="fade-up-sm" data-aos-delay="{{ $delay }}">
+              <span class="nav-link inline-flex items-center">
+                {{ .Name }}
+                <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+              <ul class="nav-dropdown-list lg:group-hover:visible lg:group-hover:opacity-100">
+                {{ range .Children }}
+                  {{ $childURL := .URL | absLangURL }}
+                  {{ $active := eq $childURL $pageURL }}
+                  <li class="nav-dropdown-item">
+                    <a
+                      class="nav-dropdown-link {{ if $active }}active{{- end -}}"
+                      {{ if findRE `^http` .URL }}
+                        target="_blank" rel="noopener"
+                      {{ end }}
+                      href="{{- if findRE `^#` .URL -}}
+                        {{- if not $.IsHome -}}
+                          {{- site.Home.RelPermalink -}}
+                        {{- end }}
+                        {{- .URL -}}
+                      {{- else -}}
+                        {{- .URL | relLangURL -}}
+                      {{- end -}}">
+                      {{ .Name }}
+                    </a>
+                  </li>
+                {{ end }}
+              </ul>
+            </li>
+          {{ else }}
+            <li class="nav-item" data-aos="fade-up-sm" data-aos-delay="{{ $delay }}">
+              <a
+                href="{{- if findRE `^#` .URL -}}
+                  {{- if not $.IsHome -}}
+                    {{- site.Home.RelPermalink -}}
+                  {{- end }}{{- .URL -}}
+                {{- else -}}
+                  {{- .URL | relLangURL -}}
+                {{- end -}}"
+                class="nav-link text-base-sm {{ if $active }}active{{- end -}}"
+                {{ if findRE `^http` .URL }}
+                  target="_blank" rel="noopener"
+                {{ end }}>
+                {{ .Name }}
+              </a>
+            </li>
+          {{ end }}
+        {{ end }}
+      </ul>
+    </div>
+
+    {{ if site.Params.navigation_button.enable }}
+      {{ partial "components/custom-button" (dict
+        "label" site.Params.navigation_button.label
+        "link" (site.Params.navigation_button.link | relLangURL)
+        "type" "btn-sm"
+        "className" "order-1 hidden lg:inline-block!"
+        "data_aos" "zoom-in-sm"
+      ) }}
+    {{ end }}
+  </nav>
+</header>

@@ -1,0 +1,130 @@
+
+<style>
+  .review-image-wrapper.active .avatar {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .review-image-wrapper.active .quote {
+    opacity: 1;
+    right: -10px;
+  }
+
+  .review-image-wrapper.active p {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .review-image-wrapper p {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .testimonial-quote:before {
+    content: '"';
+    display: inline;
+    margin-right: 2px;
+  }
+
+  .testimonial-quote:after {
+    content: '"';
+    display: inline;
+    margin-left: 2px;
+  }
+</style>
+
+{{if .enable}}
+<section class="section-sm">
+  <div class="container">
+    <div class="flex flex-col lg:flex-row justify-center lg:justify-between items-start max-lg:gap-10">
+      <div class="w-full lg:w-1/2 flex items-center justify-center lg:justify-start gap-2.5">
+        {{ range $index, $review := .review }}
+          <div
+            class="review-image-wrapper relative transition-all duration-500 ease-in-out {{ if eq $index 0 }}active{{ end }}"
+            data-index="{{ $index }}"
+            data-aos="fade-up-sm"
+            data-aos-delay="{{ mul $index 50 }}">
+            {{ partial "image" (dict
+              "Src" $review.image
+              "Alt" $review.name
+              "Size" "108x108"
+              "Class" "avatar relative mb-2 rounded-full opacity-60 scale-90 transform transition-all duration-500 ease-in-out object-cover aspect-square"
+            ) }}
+
+            <div class="quote absolute top-[45%] opacity-0 right-0 transform transition-all duration-500 ease-in-out z-20 bg-secondary w-8 h-8 flex items-center justify-center rounded-full p-2 -translate-x-1/2">
+              <i class="fas fa-quote-right text-primary"></i>
+            </div>
+
+            <p class="font-semibold opacity-0 transform transition-all duration-500 ease-in-out">
+              {{ $review.name | markdownify }}
+            </p>
+            <p class="text-base-sm opacity-0 transform transition-all duration-500 ease-in-out">
+              {{ $review.about | markdownify }}
+            </p>
+          </div>
+        {{ end }}
+      </div>
+      <div class="w-full lg:w-1/2 swiper review-slider" data-aos="fade-left-sm">
+        <div class="swiper-wrapper mb-8">
+          {{ range $index, $review := .review }}
+            <div class="swiper-slide" data-index="{{ $index }}">
+              <p class="text-lg text-text/80 max-lg:text-center leading-[30px] testimonial-quote">
+                {{ $review.says | markdownify }}
+              </p>
+            </div>
+          {{ end }}
+        </div>
+        <!-- Custom arrow buttons -->
+        <div class="flex max-lg:justify-center items-center gap-2.5">
+          <div class="custom-swiper-button-prev bg-body hover:bg-primary hover:text-body transition-colors! duration-500 ease-in-out cursor-pointer p-4 rounded-full border border-border w-12 h-12! flex justify-center items-center" data-aos="fade-right-sm">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+          <div class="custom-swiper-button-next bg-body hover:bg-primary hover:text-body transition-colors! duration-500 ease-in-out cursor-pointer p-4 rounded-full border border-border w-12 h-12! flex justify-center items-center" data-aos="fade-left-sm">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{end}}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Initialize Swiper
+    const reviewSlider = new Swiper(".review-slider", {
+      spaceBetween: 24,
+      loop: true,
+      centeredSlides: true,
+      allowTouchMove: false,
+      navigation: {
+        prevEl: ".custom-swiper-button-prev",
+        nextEl: ".custom-swiper-button-next",
+      },
+      slidesPerView: 1,
+      on: {
+        slideChange: function (swiper) {
+          updateReviewBackground(swiper.realIndex);
+        },
+      },
+    });
+
+    function updateReviewBackground(activeIndex) {
+      document.querySelectorAll(".review-image-wrapper").forEach((el) => {
+        el.classList.remove("active");
+        el.classList.remove("max-md:block");
+        el.classList.add("max-md:hidden");
+      });
+      const activeImage = document.querySelector(
+        `.review-image-wrapper[data-index="${activeIndex}"]`
+      );
+      if (activeImage) {
+        activeImage.classList.add("active");
+        activeImage.classList.remove("max-md:hidden");
+        activeImage.classList.add("max-md:block");
+      }
+    }
+  });
+</script>
+
+

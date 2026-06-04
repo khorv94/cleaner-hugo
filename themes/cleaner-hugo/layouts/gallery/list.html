@@ -1,0 +1,325 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20 gallery">
+    <div class="container text-center">
+      <div class="mb-16">
+        {{ if .Params.subtitle }}
+          <p
+            class="text-center text-primary text-base mb-6"
+            data-aos="fade-up-sm">
+            {{ .Params.subtitle | markdownify }}
+          </p>
+        {{ end }}
+        {{ if .Params.title }}
+          <h1
+            class="text-center text-h2 md:text-h1"
+            data-aos="fade-up-sm"
+            data-aos-delay="50">
+            {{ partial "components/decorated-heading" (dict
+              "text" .Params.title
+              )
+            }}
+          </h1>
+        {{ end }}
+      </div>
+
+      {{/* Image Gallery */}}
+      {{ if .Params.gallery_images }}
+      <div class="gallery-grid" id="gallery-container">
+        {{ range $index, $img := .Params.gallery_images }}
+          <div
+            data-image="{{ $img.image | absURL }}"
+            class="group relative cursor-pointer gallery-item">
+            <div class="overflow-hidden rounded-lg">
+              <img
+              src="{{ $img.image | absURL }}"
+              alt="{{ if $img.description }}{{ $img.description }}{{ else }}Image{{ end }}"
+              width="635"
+              height="433"
+              loading="lazy"
+              class="object-cover w-full"
+            />
+            </div>
+            <div class="absolute -bottom-36 group-hover:bottom-3 left-1/2 transform -translate-x-1/2 duration-500 ease-in-out w-[90%] flex items-center justify-between">
+              {{ if $img.description }}
+                <p class="bg-text/50 px-3 py-2 text-base rounded-2xl text-text-light">{{ $img.description | markdownify }}</p>
+              {{ end }}
+              <div class="bg-text/50 px-3 py-2 rounded-2xl">
+                <svg
+                  class="w-6 h-6 rotate-45 text-base text-text-light inline-block"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24">
+                  <path d="M13 6.99h3L12 3 8 6.99h3v10.02H8L12 21l4-3.99h-3z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+
+      <!-- Floating Image Viewer with Slider -->
+      <div id="gallery-overlay" class="overlay" style="display: none;">
+        <button id="close-btn" class="absolute top-4 right-4 text-white text-2xl z-10 hover:text-gray-300" aria-label="Close gallery">&times;</button>
+        <button id="prev-btn" class="slider-nav prev" aria-label="Previous image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <img id="gallery-floating-image" src="" alt="Preview" class="floating-image" />
+        <button id="next-btn" class="slider-nav next" aria-label="Next image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <style>
+    .gallery .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .gallery .overlay.open {
+      opacity: 1;
+    }
+
+    .gallery .floating-image {
+      max-width: 90%;
+      max-height: 90%;
+      transform: scale(0.5);
+      opacity: 0;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      border-radius: 8px;
+    }
+
+    .gallery .floating-image.open {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      font-size: 1.2rem;
+      padding: 0.75rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .slider-nav:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .slider-nav.prev {
+      left: 1.5rem;
+    }
+
+    .slider-nav.next {
+      right: 1.5rem;
+    }
+
+    /* Hide navigation arrows on mobile screens */
+    @media (max-width: 768px) {
+      .slider-nav {
+        display: none;
+      }
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0.75rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+      }
+    }
+
+    .gallery-item {
+      width: 100%;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const overlay = document.getElementById('gallery-overlay');
+      const floatingImage = document.getElementById('gallery-floating-image');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const closeBtn = document.getElementById('close-btn');
+
+      let currentImageIndex = 0;
+      let images = [];
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      // Collect all gallery images
+      galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        const description = item.querySelector('p') ? item.querySelector('p').textContent : '';
+        images.push({
+          src: img.src,
+          alt: img.alt,
+          description: description
+        });
+
+        // Add click event to each gallery item
+        item.addEventListener('click', function() {
+          currentImageIndex = index;
+          openGallery();
+        });
+      });
+
+      function openGallery() {
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          overlay.classList.add('open');
+          showImage();
+        }, 10);
+      }
+
+      function closeGallery() {
+        overlay.classList.remove('open');
+        floatingImage.classList.remove('open');
+
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          document.body.style.overflow = '';
+        }, 300);
+      }
+
+      function showImage() {
+        floatingImage.classList.remove('open');
+
+        setTimeout(() => {
+          floatingImage.src = images[currentImageIndex].src;
+          floatingImage.alt = images[currentImageIndex].alt;
+          floatingImage.classList.add('open');
+        }, 150);
+      }
+
+      function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        showImage();
+      }
+
+      function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage();
+      }
+
+      // Handle touch events for swipe navigation
+      function handleTouchStart(e) {
+        touchStartX = e.touches[0].clientX;
+      }
+
+      function handleTouchEnd(e) {
+        touchEndX = e.changedTouches[0].clientX;
+        handleSwipe();
+      }
+
+      function handleSwipe() {
+        const swipeThreshold = 50; // Minimum distance for a swipe
+        const swipeDistance = touchEndX - touchStartX;
+
+        if (Math.abs(swipeDistance) > swipeThreshold) {
+          if (swipeDistance > 0) {
+            // Swiped right - go to previous image
+            prevImage();
+          } else {
+            // Swiped left - go to next image
+            nextImage();
+          }
+        }
+      }
+
+      // Event listeners
+      closeBtn.addEventListener('click', closeGallery);
+      nextBtn.addEventListener('click', nextImage);
+      prevBtn.addEventListener('click', prevImage);
+
+      // Touch event listeners for swipe navigation
+      floatingImage.addEventListener('touchstart', handleTouchStart, { passive: true });
+      floatingImage.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+      // Close on overlay click (but not on image click)
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          closeGallery();
+        }
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (overlay.style.display === 'flex') {
+          switch(e.key) {
+            case 'Escape':
+              closeGallery();
+              break;
+            case 'ArrowRight':
+              nextImage();
+              break;
+            case 'ArrowLeft':
+              prevImage();
+              break;
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}
+

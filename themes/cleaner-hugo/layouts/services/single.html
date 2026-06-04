@@ -1,0 +1,80 @@
+{{ define "main" }}
+  <section class="section mt-24 sm:mt-20">
+    <div class="container">
+      <p class="text-base text-center text-primary mb-4" data-aos="fade-up-sm">
+        Service
+      </p>
+      {{ with .Title }}
+        <h1
+          class="text-h2 md:text-h1 text-center text-balance mb-16"
+          data-aos="fade-up-sm">
+          {{ . }}
+        </h1>
+      {{ end }}
+
+
+      <div data-aos="fade-up-sm" class="col-12">
+        {{ with .Params.banner }}
+          {{ partial "helpers/image" (dict "Src" . "Context" $ "Alt" $.Title "Class" "w-full aspect-video object-cover rounded-xl mb-11" "Width" "1256" "Height" "719" "Loading" "eager") }}
+        {{ end }}
+      </div>
+
+      <div class="row justify-center lg:justify-between">
+        <div class="col-12 lg:col-7 mb-11" data-aos="fade-up-sm">
+          <article>
+            <div class="content">
+              {{ .Content }}
+            </div>
+          </article>
+        </div>
+        <div class="lg:col-3 w-fit" data-aos="fade-up-sm" data-aos-delay="200">
+          <div class="rounded-xl overflow-hidden lg:w-fit lg:ml-auto">
+            {{ with .Params.banner }}
+              {{ partial "image" (dict "Src" . "Context" $ "Alt" "apply banner" "Class" "w-full" "Width" "323" "Height" "230" "Loading" "lazy") }}
+            {{ end }}
+            {{ with site.Params.notification }}
+              <a
+                href="{{ .link | safeURL }}"
+                class="w-full font-semibold text-center block px-7.5 py-6 bg-secondary"
+                >{{ .label }}</a
+              >
+            {{ end }}
+            {{ with site.Params.navigation_button }}
+              <a
+                href="{{ .link | relLangURL }}"
+                class="w-full font-semibold text-text-light text-center block px-7.5 py-6 bg-primary"
+                >{{ .label }}</a
+              >
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="container">
+      <h2 class="text-h3 md:text-h2 text-center mb-16" data-aos="fade-up-sm">
+        More services
+      </h2>
+
+      <div class="row justify-center g-4">
+        {{ $services := where site.RegularPages "Type" "services" }}
+        {{ $currentPage := . }}
+        {{ $similarServices := where $services "Permalink" "ne" $currentPage.Permalink }}
+        {{ range $index, $service := first 3 $similarServices }}
+          <div
+            class="xl:col-4 md:col-5 col-12"
+            data-aos="fade-up-sm"
+            data-aos-delay="{{ mul $index 100 }}">
+            {{ partial "components/service-card" (dict "service" $service "index" $index) }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  {{ partial "call-to-action.html" . }}
+  <!-- /Call to action -->
+{{ end }}
