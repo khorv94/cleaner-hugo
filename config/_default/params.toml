@@ -24,7 +24,7 @@ google_adsense = ""     # example: ca-pub-xxxxxxxxxxxxxxxx
 # custom script on header, example: custom_script= "<script>console.log(\"Hello World\")</script>"
 custom_script = ""
 # copyright
-copyright = "Website by Cynthius Solutions (https://cynthius-solutions.com) © 2026 All Rights Reserved"
+copyright = "Website by Cynthius Solutions © 2026 All Rights Reserved"
 # footer logo
 footer_logo = "images/logo.svg"
 # footer description
